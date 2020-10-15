@@ -1,6 +1,6 @@
 import sys
 import os
-from PySide import QtGui, QtCore
+from PySide2 import QtGui, QtCore, QtWidgets
 import subprocess
 from bs4 import BeautifulSoup
 
@@ -9,12 +9,12 @@ rp = os.path.dirname(os.path.realpath(__file__))
 hkxCliJar = os.path.join(rp, 'hkxpack-cli.jar')
 
 if os.path.exists(hkxCliJar) != True:
-    print "ERROR! Could not find hkxpack-cli.jar file. You need to drop this gui file in the same folder as hkxpack-cli.jar file! Otherwise it won't work."
+    print ("ERROR! Could not find hkxpack-cli.jar file. You need to drop this gui file in the same folder as hkxpack-cli.jar file! Otherwise it won't work.")
 
 css = '''
 '''
 
-class TestListView(QtGui.QListWidget):
+class TestListView(QtWidgets.QListWidget):
 
     fileDropped = QtCore.Signal(list)
 
@@ -47,48 +47,48 @@ class TestListView(QtGui.QListWidget):
         else:
             event.ignore()
 
-class MainForm(QtGui.QMainWindow):
+class MainForm(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MainForm, self).__init__(parent)
 
-        self.mainWidget = QtGui.QWidget()
-        self.mainLayout = QtGui.QVBoxLayout()
+        self.mainWidget = QtWidgets.QWidget()
+        self.mainLayout = QtWidgets.QVBoxLayout()
         self.mainWidget.setLayout(self.mainLayout)
 
         self.view = TestListView(self)
         self.view.fileDropped.connect(self.fileDropped)
 
-        self.byLbl = QtGui.QLabel("GUI made by ShadeAnimator.")
+        self.byLbl = QtWidgets.QLabel("GUI made by ShadeAnimator.")
 
-        self.viewlabel = QtGui.QLabel("Drag and drop files here:")
+        self.viewlabel = QtWidgets.QLabel("Drag and drop files here:")
 
         #region Pack Unpack Groupbox
-        self.groupBox = QtGui.QGroupBox("Action")
+        self.groupBox = QtWidgets.QGroupBox("Action")
 
-        self.unpackRB = QtGui.QRadioButton("&Unpack")
-        self.packRB = QtGui.QRadioButton("&Pack")
+        self.unpackRB = QtWidgets.QRadioButton("&Unpack")
+        self.packRB = QtWidgets.QRadioButton("&Pack")
 
         self.unpackRB.setChecked(True)
 
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.unpackRB)
         vbox.addWidget(self.packRB)
         vbox.addStretch(1)
         self.groupBox.setLayout(vbox)
         #endregion
-        self.pb = QtGui.QProgressBar()
+        self.pb = QtWidgets.QProgressBar()
 
-        self.button = QtGui.QPushButton("Process")
+        self.button = QtWidgets.QPushButton("Process")
         self.button.clicked.connect(self.convertXmlHkx)
 
-        self.getTxtButton = QtGui.QPushButton("Generate Rig TXT from skeleton.hkx\\xml")
+        self.getTxtButton = QtWidgets.QPushButton("Generate Rig TXT from skeleton.hkx\\xml")
         self.getTxtButton.clicked.connect(self.generateRigTxt)
 
-        self.remove = QtGui.QPushButton("Remove selected")
+        self.remove = QtWidgets.QPushButton("Remove selected")
         self.remove.clicked.connect(self.removeSelected)
 
-        self.clear = QtGui.QPushButton("Clear view")
+        self.clear = QtWidgets.QPushButton("Clear view")
         self.clear.clicked.connect(self.clearView)
 
         self.mainLayout.addWidget(self.viewlabel)
@@ -110,7 +110,7 @@ class MainForm(QtGui.QMainWindow):
     def fileDropped(self, l):
         for url in l:
             if os.path.exists(url):
-                item = QtGui.QListWidgetItem(url, self.view)
+                item = QtWidgets.QListWidgetItem(url, self.view)
                 item.setStatusTip(url)
 
     def convertXmlHkx (self, action = 'pack'):
@@ -121,15 +121,15 @@ class MainForm(QtGui.QMainWindow):
             fileExtension = file.split('.')[-1]
 
             if fileExtension == "hkx" or fileExtension == "HKX":
-                print ">>> Converting", file, "to xml"
+                print (">>> Converting", file, "to xml")
                 subprocess.call(['java', '-jar', hkxCliJar, 'unpack', file])
 
             elif fileExtension == "xml" or fileExtension == "XML":
-                print "<<< Converting", file, "to hkx"
+                print ("<<< Converting", file, "to hkx")
                 subprocess.call(['java', '-jar', hkxCliJar, 'pack', file])
 
             else:
-                print "File", file, "is not hkx or xml. Skipped."
+                print ("File", file, "is not hkx or xml. Skipped.")
 
             self.pb.setValue(i+1)
 
@@ -142,12 +142,12 @@ class MainForm(QtGui.QMainWindow):
 
             #if the file is hkx, we need to convert it to xml first.
             if fileExtension == "hkx" or fileExtension == "HKX":
-                print ">>> Converting", file, "to xml"
+                print (">>> Converting", file, "to xml")
                 subprocess.call(['java', '-jar', hkxCliJar, 'unpack', file])
                 file = file.replace('.hkx', '.xml').replace('.HKX', '.XML')
 
             #read xml and extract data
-            print "Reading file..."
+            print ("Reading file...")
             with open(file, 'r') as fileData:
                 soup = BeautifulSoup(fileData.read(), 'xml')
 
@@ -180,7 +180,7 @@ class MainForm(QtGui.QMainWindow):
             self.view.takeItem(self.view.row(item))
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     form = MainForm()
     form.show()
     app.exec_()

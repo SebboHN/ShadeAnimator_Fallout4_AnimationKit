@@ -1,19 +1,20 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
-a = Analysis(['E:\\PersonalWork\\MODDING\\GAMES\\FO4\\ShadeAnimator_Fallout4_AnimationKit\\Tools\\F4AK_HKXPackUI\\f4ak_hkxpack_UI.py'],
-             pathex=['E:\\PersonalWork\\MODDING\\GAMES\\FO4\\ShadeAnimator_Fallout4_AnimationKit\\Tools\\F4AK_HKXPackUI'],
-             binaries=None,
-             datas=None,
+a = Analysis(['C:\\Users\\Sebbo\\source\\repos\\ShadeAnimator_Fallout4_AnimationKit\\Tools\\F4AK_HKXPackUI\\f4ak_hkxpack_UI.py'],
+             pathex=['C:\\Users\\Sebbo\\source\\repos\\ShadeAnimator_Fallout4_AnimationKit\\Tools\\F4AK_HKXPackUI'],
+             binaries=[],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher)
+             cipher=block_cipher,
+             noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -21,8 +22,12 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
+          [],
           name='f4ak_hkxpack_UI',
           debug=False,
+          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
           console=True )
